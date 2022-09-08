@@ -1,0 +1,23 @@
+list-view {
+  border: solid 1px #d5d5d5;
+  margin-bottom: 20px;
+}
+list-view::part(header) {
+  background-color: #d5d5d5;
+}
+list-view::part(file) {
+  background: url(file.svg) center center no-repeat;
+  background-size: 16px;
+}
+input,
+textarea {
+  border: solid 1px #d5d5d5;
+}
+
+.two {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  white-space: nowrap;
+  grid-gap: 5px;
+  margin-top: 10px;
+}
