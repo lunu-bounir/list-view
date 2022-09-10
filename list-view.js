@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.0';
+  static version = '0.1.1';
 
   constructor() {
     super();
@@ -147,6 +147,9 @@ class SimpleListView extends HTMLElement {
     const c = this.slots('both').map(e => e.getAttribute('width') || '1fr').join(' ');
     this.#parent.style.setProperty('--structure', c);
   }
+  #adjust() {
+    this.#select.size = this.#select.options.length + (this.getAttribute('headers') === 'false' ? -1 : 0);
+  }
   add(parts, name, value, selected = false) {
     const div = document.createElement('div');
     this.slots('native').forEach(e => {
@@ -169,7 +172,7 @@ class SimpleListView extends HTMLElement {
     option.value = value;
     option.selected = selected;
     this.#select.append(option);
-    this.#select.size = this.#select.options.length;
+    this.#adjust();
 
     if (option.selected) {
       this.#emit(option, 'change');
@@ -186,7 +189,7 @@ class SimpleListView extends HTMLElement {
     if (option) {
       option.div.remove();
       option.remove();
-      this.#select.size = this.#select.options.length;
+      this.#adjust();
     }
   }
   connectedCallback() {
