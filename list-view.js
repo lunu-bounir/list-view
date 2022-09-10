@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.1';
+  static version = '0.1.2';
 
   constructor() {
     super();
@@ -32,6 +32,7 @@ class SimpleListView extends HTMLElement {
         :host {
           --height: 32px;
           --gap: 5px;
+          --color: #000;
           --selected-bg: #8de7ff;
           --selected-inactive-bg: #94b8c1;
 
@@ -54,6 +55,7 @@ class SimpleListView extends HTMLElement {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          color: var(--color);
         }
         ::slotted(*),
         #parent > div > * {
@@ -76,11 +78,12 @@ class SimpleListView extends HTMLElement {
           width: 100%;
           height: fit-content;
           padding: 0;
+          background-color: transparent;
         }
         option {
           box-sizing: border-box;
           background-color: transparent;
-          text-indent: -100vw;
+          text-indent: 200vw;
           border-radius: 0;
           height: var(--height);
         }
@@ -160,6 +163,7 @@ class SimpleListView extends HTMLElement {
       const ne = document.createElement('span');
       const part = parts[n] || {};
       ne.textContent = part.name;
+
       if (part.part) {
         ne.setAttribute('part', part.part);
       }
@@ -214,6 +218,9 @@ class SimpleListView extends HTMLElement {
   }
   get value() {
     return this.#select.value;
+  }
+  set value(v) {
+    this.#select.value = v;
   }
 }
 class DragListView extends SimpleListView {
