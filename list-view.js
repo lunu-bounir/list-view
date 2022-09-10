@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.2';
+  static version = '0.1.3';
 
   constructor() {
     super();
@@ -152,6 +152,7 @@ class SimpleListView extends HTMLElement {
   }
   #adjust() {
     this.#select.size = this.#select.options.length + (this.getAttribute('headers') === 'false' ? -1 : 0);
+    this.setAttribute('size', this.#select.size);
   }
   add(parts, name, value, selected = false) {
     const div = document.createElement('div');
@@ -189,11 +190,16 @@ class SimpleListView extends HTMLElement {
     return {div, option};
   }
   removeIndex(index) {
-    const option = this.#select.options[index + 1];
+    const option = this.#select.options[index];
     if (option) {
       option.div.remove();
       option.remove();
       this.#adjust();
+    }
+  }
+  clear() {
+    while (this.#select.options.length > 1) {
+      this.removeIndex(1);
     }
   }
   connectedCallback() {
@@ -211,7 +217,7 @@ class SimpleListView extends HTMLElement {
     this.#select.focus();
   }
   get selectedIndex() {
-    return this.#select.selectedIndex - 1;
+    return this.#select.selectedIndex;
   }
   get selectedValues() {
     return [...this.#select.selectedOptions].map(o => o.parts);
