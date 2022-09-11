@@ -1,49 +1,49 @@
-const e = document.querySelector('list-view');
+// simple
+{
+  const e = document.querySelector('simple-list-view');
 
-/* add(parts, name, value, selected) */
-e.add([
-  {name: '', part: 'file'},
-  {name: 'zero'},
-  {name: '3'},
-  {name: '4'}
-], 'zero', 0);
-e.add([
-  {name: '', part: 'file'},
-  {name: 'one'},
-  {name: '3'},
-  {name: '4'}
-], 'one', 1);
-e.add([
-  {name: '', part: 'file'},
-  {name: 'two'},
-  {name: '3'},
-  {name: '4'}
-], 'two', 2);
-e.add([
-  {name: '', part: 'file'},
-  {name: 'three'},
-  {name: '3'},
-  {name: '4'}
-], 'three', 3);
-e.add([
-  {name: '', part: 'file'},
-  {name: 'four'},
-  {name: '3'},
-  {name: '4'}
-], 'four', 4);
-e.add([
-  {name: '', part: 'file'},
-  {name: 'five'},
-  {name: '3'},
-  {name: '4'}
-], 'five', 5, true);
+  /* add(parts, name, value, selected) */
+  for (let n = 1; n < 5; n += 1) {
+    e.add([
+      {name: 'item-' + n, part: 'one'},
+      {name: n}
+    ], 'item-' + n, n, n === 1);
+  }
+}
 
-e.removeIndex(4);
-e.focus();
+{
+  const e = document.querySelector('list-view');
 
-e.addEventListener('change', e => {
-  document.getElementById('value').value = e.target.value;
-  document.getElementById('selectedIndex').value = e.target.selectedIndex;
-  document.getElementById('selectedValues').value = JSON.stringify(e.target.selectedValues, undefined, '  ');
-});
-e.dispatchEvent(new Event('change'));
+  /* add(parts, name, value, selected) */
+  for (let n = 1; n < 10; n += 1) {
+    e.add([
+      {name: '', part: 'file'},
+      {name: 'item-' + n},
+      {name: '3'},
+      {name: '4'}
+    ], 'item-' + n, n, n === 5);
+  }
+
+  e.removeIndex(4);
+  e.focus();
+
+  e.addEventListener('change', e => {
+    document.getElementById('value').value = e.target.value;
+    document.getElementById('selectedIndex').value = e.target.selectedIndex;
+    document.getElementById('selectedValues').value = JSON.stringify(e.target.selectedValues, undefined, '  ');
+  });
+  e.dispatchEvent(new Event('change'));
+
+  document.getElementById('headers').onclick = () => {
+    e.setAttribute('headers', e.getAttribute('headers') === 'false');
+  };
+  document.getElementById('drag').onclick = () => {
+    e.setAttribute('drag', e.getAttribute('drag') === 'false');
+  };
+  document.getElementById('icons').onclick = () => {
+    const e = document.getElementById('icon');
+    const b = e.getAttribute('width') === '0';
+    e.setAttribute('width', b ? '32px' : '0');
+    // e[b ? 'removeAttribute' : 'setAttribute']('hidden', true);
+  };
+}

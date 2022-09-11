@@ -6,8 +6,15 @@
   <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
-  <list-view headers="false">
-    <span width="32px"></span>
+  <h1>Simple</h1>
+  <simple-list-view>
+    <span>Title</span>
+    <span>Name</span>
+  </simple-list-view>
+
+  <h1>With Drag and Drop Support</h1>
+  <list-view>
+    <span width="32px" id="icon"></span>
     <span width="1fr">Title</span>
     <span width="0">Path</span>
     <span width="1fr"><b>Location</b></span>
@@ -20,6 +27,11 @@
     <label for="selectedValues">selectedValues</label>
     <textarea id="selectedValues" rows="10"></textarea>
   </div>
+  <p>
+    <input type="button" id="headers" value="Toggle Headers">
+    <input type="button" id="drag" value="Toggle Drag and Drop Support">
+    <input type="button" id="icons" value="Toggle Icons">
+  </p>
   <script type="text/javascript" src="../list-view.js"></script>
   <script type="text/javascript" src="index.js"></script>
 </body>
