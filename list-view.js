@@ -237,12 +237,14 @@ class SimpleListView extends HTMLElement {
   }
   set value(v) {
     this.#select.value = v;
+    this.#emit(this.#select, 'change');
   }
   get selectedIndex() {
     return this.#select.selectedIndex;
   }
   set selectedIndex(n) {
     this.#select.selectedIndex = n;
+    this.#emit(this.#select, 'change');
   }
   get selectedValues() {
     return [...this.#select.selectedOptions].map(o => o.parts);
