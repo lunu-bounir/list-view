@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.4';
+  static version = '0.1.6';
 
   constructor() {
     super();
@@ -82,6 +82,8 @@ class SimpleListView extends HTMLElement {
           height: fit-content;
           padding: 0;
           background-color: transparent;
+          overflow: hidden;
+          scrollbar-width: none;
         }
         option {
           box-sizing: border-box;
