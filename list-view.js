@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.6';
+  static version = '0.1.7';
 
   constructor() {
     super();
@@ -93,10 +93,12 @@ class SimpleListView extends HTMLElement {
           height: var(--height);
         }
         select[multiple]:focus option:checked {
-          background: var(--selected-bg) linear-gradient(0deg, var(--selected-bg) 0%, var(--selected-bg) 500%);
+          background: var(--selected-bg) linear-gradient(0deg, var(--selected-bg) 0%,
+            var(--selected-bg) 500%);
         }
         select[multiple] option:checked {
-          background: var(--selected-inactive-bg);
+          background: var(--selected-inactive-bg) linear-gradient(0deg, var(--selected-inactive-bg) 0%,
+            var(--selected-inactive-bg) 500%);
         }
         :host([headers=false]) option:first-of-type,
         :host([headers=false]) #header {
@@ -230,6 +232,8 @@ class SimpleListView extends HTMLElement {
     });
     // resize
     this.#slots('both').forEach(e => this.#watch(e));
+    // focus
+    this.addEventListener('focus', () => this.focus());
   }
   focus() {
     this.#select.focus();
