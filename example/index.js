@@ -50,6 +50,6 @@
   document.getElementById('update').onclick = () => {
     e.update(e.selectedIndex, 'name', 'new value');
     e.update(e.selectedIndex, 'value', 'new value');
-    e.update(e.selectedIndex, 'part', 1, 'new value');
+    e.update(e.selectedIndex, 'part', 'new value', 1);
   };
 }

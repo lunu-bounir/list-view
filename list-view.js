@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.9';
+  static version = '0.2.0';
 
   constructor() {
     super();
@@ -216,7 +216,7 @@ class SimpleListView extends HTMLElement {
     key: value -> updates option's value
     key: part -> updates parts[value]'s textContent to extra
   */
-  update(index, key, value, extra) {
+  update(index, key, value, at = 0) {
     if (index !== 0) {
       const option = this.#select.options[index];
       if (option) {
@@ -232,8 +232,8 @@ class SimpleListView extends HTMLElement {
           }
         }
         else if (key === 'part') {
-          option.parts[value].name = extra;
-          option.div.children[value + this.offset].textContent = extra;
+          option.parts[at].name = value;
+          option.div.children[at + this.offset].textContent = value;
         }
       }
     }
