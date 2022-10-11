@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.7';
+  static version = '0.1.8';
 
   constructor() {
     super();
@@ -209,12 +209,41 @@ class SimpleListView extends HTMLElement {
 
     return {div, option};
   }
+  /*
+    key: name -> updates option's name
+    key: value -> updates option's value
+    key: part -> updates parts[value]'s textContent to extra
+  */
+  update(index, key, value, extra) {
+    if (index !== 0) {
+      const option = this.#select.options[index];
+      if (option) {
+        if (key === 'name' || key === 'value' || key === 'selected') {
+          if (key === 'name') {
+            option.textContent = value || '';
+          }
+          else if (key === 'value') {
+            option.value = value;
+          }
+          else if (key === 'selected') {
+            option.selected = value;
+          }
+        }
+        else if (key === 'part') {
+          option.parts[value].name = extra;
+          option.div.children[value].textContent = extra;
+        }
+      }
+    }
+  }
   removeIndex(index) {
-    const option = this.#select.options[index];
-    if (option) {
-      option.div.remove();
-      option.remove();
-      this.#adjust();
+    if (index !== 0) {
+      const option = this.#select.options[index];
+      if (option) {
+        option.div.remove();
+        option.remove();
+        this.#adjust();
+      }
     }
   }
   clear() {
@@ -249,8 +278,16 @@ class SimpleListView extends HTMLElement {
     return this.#select.selectedIndex;
   }
   set selectedIndex(n) {
-    this.#select.selectedIndex = n;
-    this.#emit(this.#select, 'change');
+    if (n !== 0) {
+      this.#select.selectedIndex = n;
+      this.#emit(this.#select, 'change');
+    }
+  }
+  get length() {
+    return this.#select.length - 1;
+  }
+  get values() {
+    return [...this.#select.options].slice(1).map(o => o.parts);
   }
   get selectedValues() {
     return [...this.#select.selectedOptions].map(o => o.parts);

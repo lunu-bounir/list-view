@@ -29,6 +29,7 @@
 
   e.addEventListener('change', e => {
     document.getElementById('value').value = e.target.value;
+    document.getElementById('values').value = e.target.values;
     document.getElementById('selectedIndex').value = e.target.selectedIndex;
     document.getElementById('selectedValues').value = JSON.stringify(e.target.selectedValues, undefined, '  ');
   });
