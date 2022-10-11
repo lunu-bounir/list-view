@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.1.8';
+  static version = '0.1.9';
 
   constructor() {
     super();
@@ -118,6 +118,8 @@ class SimpleListView extends HTMLElement {
     this.#header = this.shadowRoot.getElementById('header');
     this.#parent = this.shadowRoot.getElementById('parent');
     this.#select = this.shadowRoot.getElementById('select');
+
+    this.offset = 0; // in case there are extra columns, edit this value
   }
   #slots(method = 'both') { // native, user, both
     const es = [];
@@ -231,7 +233,7 @@ class SimpleListView extends HTMLElement {
         }
         else if (key === 'part') {
           option.parts[value].name = extra;
-          option.div.children[value].textContent = extra;
+          option.div.children[value + this.offset].textContent = extra;
         }
       }
     }
@@ -342,6 +344,8 @@ class DragListView extends SimpleListView {
       'afterBegin',
       `<span width="20px" part="drag"></span>`
     );
+    // we added a new column
+    this.offset += 1;
 
     this.shadowRoot.addEventListener('dragstart', e => this.#dragstart(e));
     this.shadowRoot.addEventListener('dragend', e => this.#dragend(e));

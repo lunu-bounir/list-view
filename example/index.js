@@ -47,4 +47,9 @@
     e.setAttribute('width', b ? '32px' : '0');
     // e[b ? 'removeAttribute' : 'setAttribute']('hidden', true);
   };
+  document.getElementById('update').onclick = () => {
+    e.update(e.selectedIndex, 'name', 'new value');
+    e.update(e.selectedIndex, 'value', 'new value');
+    e.update(e.selectedIndex, 'part', 1, 'new value');
+  };
 }
