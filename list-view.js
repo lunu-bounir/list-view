@@ -22,7 +22,7 @@ class SimpleListView extends HTMLElement {
   #parent;
   #select;
 
-  static version = '0.2.0';
+  static version = '0.2.1';
 
   constructor() {
     super();
@@ -92,11 +92,11 @@ class SimpleListView extends HTMLElement {
           border-radius: 0;
           height: var(--height);
         }
-        select[multiple]:focus option:checked {
+        select:focus option:checked {
           background: var(--selected-bg) linear-gradient(0deg, var(--selected-bg) 0%,
             var(--selected-bg) 500%);
         }
-        select[multiple] option:checked {
+        select option:checked {
           background: var(--selected-inactive-bg) linear-gradient(0deg, var(--selected-inactive-bg) 0%,
             var(--selected-inactive-bg) 500%);
         }
@@ -107,7 +107,7 @@ class SimpleListView extends HTMLElement {
       </style>
       <style id="extra"></style>
       <div id="parent">
-        <select multiple id="select" tabindex="1">
+        <select id="select" tabindex="1" multiple>
           <option disabled part=header>header</option>
         </select>
         <div id="header">
@@ -176,8 +176,9 @@ class SimpleListView extends HTMLElement {
     this.#select.size = this.#select.options.length + (this.getAttribute('headers') === 'false' ? -1 : 0);
     this.setAttribute('size', this.#select.size);
   }
-  add(parts, name, value, selected = false) {
+  option(parts, name, value, selected = false) {
     const div = document.createElement('div');
+    div.setAttribute('part', 'row');
     this.#slots('native').forEach(e => {
       const ne = e.cloneNode(true);
       div.append(ne);
@@ -192,51 +193,48 @@ class SimpleListView extends HTMLElement {
       }
       div.append(ne);
     });
-    this.#parent.append(div);
 
     const option = document.createElement('option');
     option.textContent = name || '';
     option.value = value;
     option.selected = selected;
-    this.#select.append(option);
-    this.#adjust();
-
-    if (option.selected) {
-      this.#emit(option, 'change');
-    }
 
     option.parts = div.parts = parts;
     option.div = div;
     div.option = option;
 
-    return {div, option};
-  }
-  /*
-    key: name -> updates option's name
-    key: value -> updates option's value
-    key: part -> updates parts[value]'s textContent to extra
-  */
-  update(index, key, value, at = 0) {
-    if (index !== 0) {
-      const option = this.#select.options[index];
-      if (option) {
-        if (key === 'name' || key === 'value' || key === 'selected') {
-          if (key === 'name') {
-            option.textContent = value || '';
-          }
-          else if (key === 'value') {
-            option.value = value;
-          }
-          else if (key === 'selected') {
-            option.selected = value;
-          }
-        }
-        else if (key === 'part') {
-          option.parts[at].name = value;
-          option.div.children[at + this.offset].textContent = value;
-        }
+    const insert = (at = this.length) => {
+      this.#parent.children[at + 1].after(div);
+
+      this.#select.options[at].after(option);
+      this.#adjust();
+
+      if (option.selected) {
+        this.#emit(option, 'change');
       }
-    }
+    };
+
+    option.object = {
+      _internal: {
+        div,
+        option
+      },
+      parts,
+      get name() {
+        return option.textContent;
+      },
+      set name(v) {
+        option.textContent = v;
+      },
+      get value() {
+        return option.value;
+      },
+      set value(v) {
+        option.value = v;
+      },
+      insert
+    };
+    return option.object;
   }
   removeIndex(index) {
     if (index !== 0) {
@@ -279,6 +277,12 @@ class SimpleListView extends HTMLElement {
   get selectedIndex() {
     return this.#select.selectedIndex;
   }
+  get options() {
+    return [...this.#select.options].slice(1).map(o => o.object);
+  }
+  get selectedOptions() {
+    return [...this.#select.selectedOptions].map(o => o.object);
+  }
   set selectedIndex(n) {
     if (n !== 0) {
       this.#select.selectedIndex = n;
@@ -288,18 +292,20 @@ class SimpleListView extends HTMLElement {
   get length() {
     return this.#select.length - 1;
   }
-  get values() {
-    return [...this.#select.options].slice(1).map(o => o.parts);
-  }
-  get selectedValues() {
-    return [...this.#select.selectedOptions].map(o => o.parts);
-  }
   static get observedAttributes() {
-    return ['headers', 'width'];
+    return ['headers', 'width', 'multiple'];
   }
-  attributeChangedCallback(name) {
+  attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'headers') {
       this.#adjust();
+    }
+    else if (name === 'multiple') {
+      if (newValue === 'false') {
+        this.#select.removeAttribute('multiple');
+      }
+      else {
+        this.#select.setAttribute('multiple', newValue);
+      }
     }
   }
 }
@@ -411,10 +417,10 @@ class DragListView extends SimpleListView {
       dest.option.before(...[...dragged].map(d => d.option));
     }
   }
-  add(...args) {
-    const r = super.add(...args);
+  option(...args) {
+    const r = super.option(...args);
     if (this.getAttribute('drag') !== 'false') {
-      r.div.setAttribute('draggable', true);
+      r._internal.div.setAttribute('draggable', true);
     }
     return r;
   }

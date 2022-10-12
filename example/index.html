@@ -13,7 +13,7 @@
   </simple-list-view>
 
   <h1>With Drag and Drop Support</h1>
-  <list-view>
+  <list-view multiple=false>
     <span width="32px" id="icon"></span>
     <span width="1fr">Title</span>
     <span width="0">Path</span>
@@ -22,18 +22,15 @@
   <div class="two">
     <label for="value">value</label>
     <input type="text" id="value">
-    <label for="values">values</label>
-    <input type="text" id="values">
     <label for="selectedIndex">selectedIndex</label>
     <input type="text" id="selectedIndex">
-    <label for="selectedValues">selectedValues</label>
-    <textarea id="selectedValues" rows="10"></textarea>
   </div>
   <p>
     <input type="button" id="update" value="Update">
     <input type="button" id="headers" value="Toggle Headers">
     <input type="button" id="drag" value="Toggle Drag and Drop Support">
     <input type="button" id="icons" value="Toggle Icons">
+    <input type="button" id="sort-za" value="Sort Z-A">
   </p>
   <script type="text/javascript" src="../list-view.js"></script>
   <script type="text/javascript" src="index.js"></script>

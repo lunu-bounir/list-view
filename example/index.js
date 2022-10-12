@@ -4,11 +4,16 @@
 
   /* add(parts, name, value, selected) */
   for (let n = 1; n < 5; n += 1) {
-    e.add([
+    const o = e.option([
       {name: 'item-' + n, part: 'one'},
       {name: n}
     ], 'item-' + n, n, n === 1);
+    o.insert(0);
   }
+
+  e.addEventListener('change', () => {
+    console.log('selected entries', e.selectedOptions);
+  });
 }
 
 {
@@ -16,12 +21,13 @@
 
   /* add(parts, name, value, selected) */
   for (let n = 1; n < 10; n += 1) {
-    e.add([
+    const o = e.option([
       {name: '', part: 'file'},
       {name: 'item-' + n},
       {name: '3'},
-      {name: '4'}
+      {name: n}
     ], 'item-' + n, n, n === 5);
+    o.insert();
   }
 
   e.removeIndex(4);
@@ -29,9 +35,7 @@
 
   e.addEventListener('change', e => {
     document.getElementById('value').value = e.target.value;
-    document.getElementById('values').value = e.target.values;
     document.getElementById('selectedIndex').value = e.target.selectedIndex;
-    document.getElementById('selectedValues').value = JSON.stringify(e.target.selectedValues, undefined, '  ');
   });
   e.dispatchEvent(new Event('change'));
 
@@ -48,8 +52,13 @@
     // e[b ? 'removeAttribute' : 'setAttribute']('hidden', true);
   };
   document.getElementById('update').onclick = () => {
-    e.update(e.selectedIndex, 'name', 'new value');
-    e.update(e.selectedIndex, 'value', 'new value');
-    e.update(e.selectedIndex, 'part', 'new value', 1);
+    for (const option of e.selectedOptions) {
+      option._internal.option.name =
+      option._internal.div.children[2].textContent = 'new value';
+    }
+  };
+  document.getElementById('sort-za').onclick = () => {
+    const v = e.options.sort((a, b) => Number(b.value) - Number(a.value));
+    v.forEach((a, n) => a.insert(n));
   };
 }
